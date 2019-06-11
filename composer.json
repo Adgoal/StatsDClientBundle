@@ -1,8 +1,13 @@
 {
-    "name": "liuggio/statsd-client-bundle",
+    "name": "adgoal/statsd-client-bundle",
     "type": "symfony-bundle",
     "description": "Provides a statsd client and simple ready-to-use support for #Symfony2 Application",
-    "keywords": ["symfony", "statsd", "graphite", "monitor"],
+    "keywords": [
+        "symfony",
+        "statsd",
+        "graphite",
+        "monitor"
+    ],
     "license": "MIT",
     "authors": [
         {
@@ -31,12 +36,13 @@
         "monolog/monolog": "Monolog, in order to generate statistic from log >=1.2.0)"
     },
     "autoload": {
-        "psr-0": { "Liuggio\\StatsDClientBundle": "" }
+        "psr-4": {
+            "Liuggio\\StatsDClientBundle\\": "src"
+        }
     },
-    "target-dir": "Liuggio/StatsDClientBundle",
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.8.x-dev"
+    "autoload-dev": {
+        "psr-4": {
+            "Liuggio\\StatsDClientBundle\\Tests\\": "tests"
         }
     }
 }

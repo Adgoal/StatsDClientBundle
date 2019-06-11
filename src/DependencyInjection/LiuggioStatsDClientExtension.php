@@ -33,7 +33,7 @@ class LiuggioStatsDClientExtension extends Extension
         $container->setParameter($this->getAlias().'.enable_collector', $config['enable_collector']);
         $container->setParameter($this->getAlias().'.collectors', $config['collectors']);
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
         if ($config['enable_collector']) {

@@ -22,7 +22,7 @@
     ],
     "require": {
         "php": "^5.6 || ^7.0",
-        "liuggio/statsd-php-client": "~1.0.14",
+        "adgoal/statsd-php-client": "~1.1",
         "symfony/framework-bundle": "^3.0 || ^4.0"
     },
     "require-dev": {

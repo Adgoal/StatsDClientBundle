@@ -1,21 +1,27 @@
 <?php
+declare(strict_types=1);
 
 namespace Liuggio\StatsDClientBundle\StatsCollector;
 
 use Doctrine\DBAL\Logging\SQLLogger;
+use function sprintf;
 
+/**
+ * Class DbalStatsCollector
+ * @package Liuggio\StatsDClientBundle\StatsCollector
+ */
 class DbalStatsCollector extends StatsCollector implements SQLLogger, StatsCollectorInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function startQuery($sql, array $params = null, array $types = null)
+    public function startQuery($sql, ?array $params = null, ?array $types = null)
     {
         $verb = $this->extractFirstWord($sql);
         if (empty($verb)) {
             return;
         }
-        $key = \sprintf('%s.%s', $this->getStatsDataKey(), $verb);
+        $key = sprintf('%s.%s', $this->getStatsDataKey(), $verb);
         if (null === $this->getStatsdDataFactory()) {
             return;
         }

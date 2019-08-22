@@ -78,6 +78,7 @@ Reference: `statsd`
 This service implements `liuggio_stats_d_client.factory` methods, as well as flush.
 It makes using service less verbose.
 ```php
+declare(strict_types=1);
 $this->get('statsd')
      ->increment('log.error')
      ->gauge('log.rate', 25)

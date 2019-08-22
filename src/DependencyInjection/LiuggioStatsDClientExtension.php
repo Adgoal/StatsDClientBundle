@@ -1,13 +1,19 @@
 <?php
+declare(strict_types=1);
 
 namespace Liuggio\StatsDClientBundle\DependencyInjection;
 
+use Exception;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use function constant;
+use function count;
+use function is_int;
+use function strtoupper;
 
 /**
  * This is the class that loads and manages your bundle configuration.
@@ -18,6 +24,8 @@ class LiuggioStatsDClientExtension extends Extension
 {
     /**
      * {@inheritdoc}
+     * @throws Exception
+     * @throws Exception
      */
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -39,7 +47,7 @@ class LiuggioStatsDClientExtension extends Extension
         if ($config['enable_collector']) {
             $loader->load('collectors.yml');
 
-            if (\count($config['collectors'])) {
+            if (count($config['collectors'])) {
                 // Define the Listener
                 $definition = new Definition('%liuggio_stats_d_client.collector.listener.class%',
                     [new Reference('liuggio_stats_d_client.collector.service')]
@@ -60,9 +68,13 @@ class LiuggioStatsDClientExtension extends Extension
         }
     }
 
+    /**
+     * @param $level
+     * @return int|mixed
+     */
     private function convertLevelToConstant($level)
     {
-        return \is_int($level) ? $level : \constant('Monolog\Logger::'.\strtoupper($level));
+        return is_int($level) ? $level : constant('Monolog\Logger::'. strtoupper($level));
     }
 
     /**

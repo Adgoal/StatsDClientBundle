@@ -1,10 +1,13 @@
 <?php
+declare(strict_types=1);
 
 namespace Liuggio\StatsDClientBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
+use function count;
+use function is_array;
 
 /**
  * Adds tagged data_collector services to profiler service
@@ -14,6 +17,9 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class CollectorCompilerPass implements CompilerPassInterface
 {
+    /**
+     * @param ContainerBuilder $container
+     */
     public function process(ContainerBuilder $container)
     {
         if (false === $container->hasDefinition('liuggio_stats_d_client.collector.service')) {
@@ -24,7 +30,7 @@ class CollectorCompilerPass implements CompilerPassInterface
         $collectorsEnabled = $container->getParameter('liuggio_stats_d_client.collectors');
         $collectorIsEnabled = $container->getParameter('liuggio_stats_d_client.enable_collector');
 
-        if ($collectorIsEnabled && null !== $collectorsEnabled && \is_array($collectorsEnabled) && \count($collectorsEnabled) > 0) {
+        if ($collectorIsEnabled && null !== $collectorsEnabled && is_array($collectorsEnabled) && count($collectorsEnabled) > 0) {
             foreach ($container->findTaggedServiceIds('stats_d_collector') as $id => $attributes) {
                 // only if there's on the parameter means that is enable
                 if (isset($collectorsEnabled[$id])) {

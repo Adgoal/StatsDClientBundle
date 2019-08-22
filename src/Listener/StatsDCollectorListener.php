@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Liuggio\StatsDClientBundle\Listener;
 
@@ -9,6 +10,8 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
+use function count;
+use function is_array;
 
 /**
  * StatsDCollectorListener.
@@ -52,6 +55,9 @@ class StatsDCollectorListener implements EventSubscriberInterface
         $this->exception = $event->getException();
     }
 
+    /**
+     * @param GetResponseEvent $event
+     */
     public function onKernelRequest(GetResponseEvent $event)
     {
         $this->requests[] = $event->getRequest();
@@ -79,12 +85,15 @@ class StatsDCollectorListener implements EventSubscriberInterface
 
         $dataToSend = $this->collector->collect($master, $request, $event->getResponse(), $exception);
 
-        if (null === $dataToSend || !\is_array($dataToSend) || \count($dataToSend) < 1) {
+        if (null === $dataToSend || !is_array($dataToSend) || count($dataToSend) < 1) {
             return;
         }
         $this->collector->send($dataToSend);
     }
 
+    /**
+     * @return array
+     */
     public static function getSubscribedEvents()
     {
         return [

@@ -1,11 +1,16 @@
 <?php
+declare(strict_types=1);
 
 namespace Liuggio\StatsDClientBundle\Service;
 
+use Exception;
+use InvalidArgumentException;
 use Liuggio\StatsdClient\StatsdClientInterface;
 use Liuggio\StatsDClientBundle\StatsCollector\StatsCollectorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use function array_merge;
+use function sprintf;
 
 /**
  * StatsDCollectorService.
@@ -19,6 +24,7 @@ class StatsDCollectorService
 
     /**
      * Constructor.
+     * @param StatsdClientInterface $stats_d_client
      */
     public function __construct(StatsdClientInterface $stats_d_client)
     {
@@ -32,11 +38,11 @@ class StatsDCollectorService
      * @param bool       $isMasterRequest
      * @param Request    $request         A Request instance
      * @param Response   $response        A Response instance
-     * @param \Exception $exception       An exception instance if the request threw one
+     * @param Exception $exception       An exception instance if the request threw one
      *
      * @return array
      */
-    public function collect($isMasterRequest, Request $request, Response $response, \Exception $exception = null)
+    public function collect($isMasterRequest, Request $request, Response $response, Exception $exception = null)
     {
         $statSData = [];
         foreach ($this->collectors as $collector) {
@@ -45,7 +51,7 @@ class StatsDCollectorService
             }
 
             $collector->collect($request, $response, $exception);
-            $statSData = \array_merge($statSData, $collector->getStatsData());
+            $statSData = array_merge($statSData, $collector->getStatsData());
         }
 
         return $statSData;
@@ -103,12 +109,12 @@ class StatsDCollectorService
      *
      * @return StatsCollectorInterface A StatsCollectorInterface instance
      *
-     * @throws \InvalidArgumentException if the collector does not exist
+     * @throws InvalidArgumentException if the collector does not exist
      */
     public function get($name)
     {
         if (!isset($this->collectors[$name])) {
-            throw new \InvalidArgumentException(\sprintf('Collector "%s" does not exist.', $name));
+            throw new InvalidArgumentException(sprintf('Collector "%s" does not exist.', $name));
         }
 
         return $this->collectors[$name];
@@ -118,6 +124,7 @@ class StatsDCollectorService
      * Send to StatD all the data collected.
      *
      * @param mixed $data An array of StatData
+     * @return mixed
      */
     public function send($data)
     {

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Liuggio\StatsDClientBundle\DependencyInjection;
 
@@ -14,6 +15,10 @@ class Configuration implements ConfigurationInterface
 {
     private $debug;
 
+    /**
+     * Configuration constructor.
+     * @param $debug
+     */
     public function __construct($debug)
     {
         $this->debug = $debug;

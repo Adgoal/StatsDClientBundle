@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Liuggio\StatsDClientBundle\Command;
 
@@ -30,6 +31,10 @@ EOT
         );
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $data = $this->getDataFactory()->decrement($input->getArgument('key'));
